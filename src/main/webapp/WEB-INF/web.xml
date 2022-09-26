@@ -2,26 +2,41 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
   <display-name>MyBoard</display-name>
   
-  <servlet>
-  	<servlet-name>DBCInit</servlet-name>
-  	<servlet-class>myboard.util.DBCPInitServlet</servlet-class>
-  	<load-on-startup>1</load-on-startup>
-  </servlet>
+	<servlet>
+		<servlet-name>DBCPInit</servlet-name>
+		<servlet-class>myboard.util.DBCPInitServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
   
-  <servlet>
-    <servlet-name>fileupload</servlet-name>
-    <servlet-class>myboard.util.FileuploadServlet</servlet-class>
-    <multipart-config>
-      <location>c:/uploadfiles</location>
-      <max-file-size>-1</max-file-size>
-      <max-request-size>-1</max-request-size>
-      <file-size-threshold>1024</file-size-threshold>
-    </multipart-config>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>fileupload</servlet-name>
-    <url-pattern>/fileupload</url-pattern>
-  </servlet-mapping>
+  	<servlet>
+		<servlet-name>controller</servlet-name>
+		<servlet-class>myboard.controller.MVCController</servlet-class>
+		<init-param>
+			<param-name>commandFile</param-name>
+			<param-value>/WEB-INF/props/command.properties</param-value>
+		</init-param>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>controller</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+  
+	<servlet>
+		<servlet-name>fileupload</servlet-name>
+		<servlet-class>myboard.util.FileuploadServlet</servlet-class>
+		<multipart-config>
+		<location>c:/uploadfiles</location>
+      	<max-file-size>-1</max-file-size>
+      	<max-request-size>-1</max-request-size>
+      	<file-size-threshold>1024</file-size-threshold>
+    	</multipart-config>
+  	</servlet>
+  	
+  	<servlet-mapping>
+    	<servlet-name>fileupload</servlet-name>
+    	<url-pattern>/fileupload</url-pattern>
+  	</servlet-mapping>
   
   <servlet>
     <servlet-name>filedownload</servlet-name>

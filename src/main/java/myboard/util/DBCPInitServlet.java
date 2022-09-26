@@ -11,6 +11,9 @@ import org.apache.commons.dbcp2.PoolableCallableStatement;
 import org.apache.commons.dbcp2.PoolableConnection;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+import myboard.constants.DBCPConstants;
+
 import org.apache.commons.dbcp2.PoolableConnectionFactory;
 import org.apache.commons.dbcp2.PoolingDriver;
 
@@ -24,19 +27,19 @@ public class DBCPInitServlet extends HttpServlet {
 	
 	private void loadJDBCDriver() {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException ex) {
-			throw new RuntimeException("fail to load JDBC Driver", ex);
+			Class.forName((String)DBCPConstants.props.get("JDBC_DRIVER_NAME"));
+		} catch (ClassNotFoundException cnfe) {
+			throw new RuntimeException("fail to load JDBC Driver", cnfe);
 		}
 	}
 	
 	private void initConnectionPool() {
 		try {
-			String jdbcUrl = "jdbc:mysql://localhost:3306/chap14?" + "useUnicode=true&characterEncoding=utf8";
-			String username = "jieun";
-			String pw = "1234";
+			String JDBC_URL = (String)DBCPConstants.props.get("JDBC_URL");
+			String JDBC_USER = (String)DBCPConstants.props.get("JDBC_USER");
+			String JDBC_PASS = (String)DBCPConstants.props.get("JDBC_PATH");
 			
-			ConnectionFactory connFactory = new DriverManagerConnectionFactory(jdbcUrl, username, pw);
+			ConnectionFactory connFactory = new DriverManagerConnectionFactory(JDBC_URL, JDBC_USER, JDBC_PASS);
 			
 			PoolableConnectionFactory poolableConnFactory = new PoolableConnectionFactory(connFactory, null);
 			poolableConnFactory.setValidationQuery("select 1");
@@ -50,9 +53,9 @@ public class DBCPInitServlet extends HttpServlet {
 			GenericObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnFactory, poolConfig);
 			poolableConnFactory.setPool(connectionPool);
 			
-			Class.forName("org.apache.commons.dpcp2.PoolingDriver");
-			PoolingDriver driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
-			driver.registerPool("chap14", connectionPool);
+			Class.forName((String)DBCPConstants.props.get("JDBC_POOLING_DRIVER_NAME"));
+			PoolingDriver driver = (PoolingDriver) DriverManager.getDriver((String)DBCPConstants.props.get("JDBC_POOLING_DRIVER"));
+			driver.registerPool((String)DBCPConstants.props.get("JDBC_POOL_NAME"), connectionPool);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 

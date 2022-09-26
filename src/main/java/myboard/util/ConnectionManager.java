@@ -4,26 +4,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import myboard.constants.DBCPConstants;
+
 import java.sql.SQLException;
 
 public class ConnectionManager {
 	
 	public static Connection getConnection() {
-		try {
-			// JDBC 드라이버 클래스를 메모리에 로딩
-			Class.forName("core.log.jdbc.driver.MysqlDriver");
-		} catch (ClassNotFoundException cnfe) {
-			// 클래스가 없으면 익셉션
-			cnfe.printStackTrace();
-		}
 		// 2. Connection 획득
 		// JDBC URL: 데이터베이스 연결할 경로
-		String JDBC_URL = "jdbc:mysql://localhost:3306/board?useUnicode=true&characterEncoding=utf8";
-		String JDBC_USER = "jieun";
-		String JDBC_PASS = "1234";
+		String JDBC_URL = (String)DBCPConstants.props.get("JDBC_POOLING_URL");
 		Connection conn = null;
 		try {
-			conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASS);
+			conn = DriverManager.getConnection(JDBC_URL);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
